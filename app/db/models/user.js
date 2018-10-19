@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt-nodejs");
+const dotenv = require('dotenv');
+/** 
+ * Load environmental variables from .env file, where API keys and passwords are configured
+ */
+dotenv.load({
+    path: '.env'
+});
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -19,11 +26,32 @@ const userSchema = new mongoose.Schema({
     google: String,
 
     profile: {
-        name: String,
-        gender: String,
-        location: String,
-        website: String,
-        picture: String
+        firstName: String,
+        lastName: String,
+        address: String,
+        birthday: Date,
+    },
+
+    status: {
+        type: String,
+        enum: ['member', 'guest']
+    },
+
+    cardsAmount: {
+        type: Number,
+        default: process.env.DEFAULT_AMOUNT_OF_CARDS
+    },
+
+    accountBalance: {
+        type: Number,
+        default: process.env.STARTING_BALANCE
+    },
+
+    settings: {
+        emailNotifications: {
+            type: Boolean,
+            default: true
+        }
     }
 }, {
     timestamps: true
