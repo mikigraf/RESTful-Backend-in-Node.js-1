@@ -2,8 +2,10 @@ version: "3"
 services:
   mongo:
     image: mongo:3.6
+    restart: on-failure
   web:
     build: .
+    restart: on-failure
     ports:
       - "8080:8080"
     environment:
