@@ -9,8 +9,6 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const compression = require('compression');
 const expressValidator = require('express-validator');
-// const expressStatusMonitor = require('express-status-monitor');
-
 /** 
  * Load environmental variables from .env file, where API keys and passwords are configured
  */
@@ -19,36 +17,21 @@ dotenv.load({
 });
 
 /** 
- * Connect to MongoDB
- */
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-mongoose.set('useNewUrlParser', true);
-mongoose.connect(process.env.MONGODB_URI, {
-    keepAlive: true
-});
-
-mongoose.connection.on('connected', (success) => {
-    console.log('%s MongoDB connection was succesful.', chalk.green('✓'));
-});
-
-mongoose.connection.on('error', (err) => {
-    console.error(err);
-    console.log('%s MongoDB connection error. Please make sure that MongoDB is running.', chalk.red('✗'));
-    process.exit();
-});
-
-/** 
  * Create express server
  */
 const app = express();
+// app.use(require('express-status-monitor')());
+
+/**
+ * Initialize database connection
+ */
+require('./app/db/index');
 
 /** 
  * Express configuration.
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
-// app.set(expressStatusMonitor());
 app.use(compression());
 
 app.use(logger('dev'));

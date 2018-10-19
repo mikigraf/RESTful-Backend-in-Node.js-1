@@ -9,6 +9,7 @@
   "author": "Mikolaj Wawrzyniak",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
@@ -33,6 +34,7 @@
     "passport-facebook": "^2.1.1",
     "passport-google-oauth": "^1.0.0",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "request": "^2.88.0"
   }
 }
