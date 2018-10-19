@@ -1,0 +1,38 @@
+{
+  "name": "wsit-restful-backend-api",
+  "version": "1.0.0",
+  "description": "Restful backend API for Wann Spiele Ich Tennis",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mikolaj Wawrzyniak",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "chalk": "^2.4.1",
+    "compression": "^1.7.3",
+    "connect-mongo": "^2.0.1",
+    "cookie-session": "^2.0.0-beta.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "express-status-monitor": "^1.2.3",
+    "express-validator": "^5.3.0",
+    "jsonwebtoken": "^8.3.0",
+    "lusca": "^1.6.1",
+    "mocha": "^5.2.0",
+    "mongo-store": "0.0.2",
+    "mongoose": "^5.3.4",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
+  }
+}
