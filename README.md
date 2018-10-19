@@ -1,5 +1,27 @@
 # WSIT-Restful-Backend-API
 
+## .env
+
+```bash
+BASE_URL=http://localhost:8080
+MONGODB_URI=mongodb://<app admin username>:<app admin password>@localhost:27017/wsit
+
+SESSION_SECRET=Your Session Secret goes here
+
+FACEBOOK_ID=
+FACEBOOK_SECRET=
+
+GOOGLE_ID=
+GOOGLE_SECRET=
+
+# Global settings for every client
+DEFAULT_AMOUNT_OF_CARDS=1
+STARTING_BALANCE=0
+GUESTS_ALLOWED=true
+CLIENT_NAME='Mikolaj Wawrzyniak'
+CLIENT_ADDRESS='Sesame Street 187'
+```
+
 ## Requierments
 
 - Node.js

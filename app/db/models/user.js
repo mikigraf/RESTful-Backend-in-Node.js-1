@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema({
 /**
  * Password hashing
  */
-userSchema.pre('save', async (next) => {
+userSchema.pre('save', async function (next) {
     try {
         if (!this.isModified("password")) {
             next();
@@ -76,7 +76,7 @@ userSchema.pre('save', async (next) => {
 /**
  * Compare password hashes
  */
-userSchema.methods.comparePassword = async (candidatePassword, cb) => {
+userSchema.methods.comparePassword = async function (candidatePassword, cb) => {
     try {
         let isMatch = await bcrypt.compare(candidatePassword, this.password);
         return isMatch;
