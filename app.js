@@ -19,23 +19,29 @@ dotenv.load({
 });
 
 /** 
- * Create express server
- */
-const app = express();
-
-/** 
  * Connect to MongoDB
  */
-
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useNewUrlParser', true);
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI, {
+    keepAlive: true
+});
+
+mongoose.connection.on('connected', (success) => {
+    console.log('%s MongoDB connection was succesful.', chalk.green('✓'));
+});
+
 mongoose.connection.on('error', (err) => {
     console.error(err);
     console.log('%s MongoDB connection error. Please make sure that MongoDB is running.', chalk.red('✗'));
     process.exit();
 });
+
+/** 
+ * Create express server
+ */
+const app = express();
 
 /** 
  * Express configuration.
