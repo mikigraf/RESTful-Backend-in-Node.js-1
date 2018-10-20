@@ -11,14 +11,19 @@ dotenv.load({
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
-        unique: false
+        unique: false,
+        required: true
     },
     username: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
 
-    password: String,
+    password: {
+        type: String,
+        required: true
+    },
     passwordResetToken: String,
     passwordResetExpires: Date,
 
@@ -26,30 +31,47 @@ const userSchema = new mongoose.Schema({
     google: String,
 
     profile: {
-        firstName: String,
-        lastName: String,
-        address: String,
-        birthday: Date,
+        firstName: {
+            type: String,
+            required: true
+        },
+        lastName: {
+            type: String,
+            required: true
+        },
+        address: {
+            type: String,
+            required: true
+        },
+        birthday: {
+            type: Date,
+            required: true
+        },
     },
 
     status: {
         type: String,
-        enum: ['member', 'guest']
+        enum: ['member', 'guest', 'admin'],
+        required: true,
+        default: 'guest'
     },
 
     cardsAmount: {
         type: Number,
+        required: true,
         default: process.env.DEFAULT_AMOUNT_OF_CARDS
     },
 
     accountBalance: {
         type: Number,
+        required: true,
         default: process.env.STARTING_BALANCE
     },
 
     settings: {
         emailNotifications: {
             type: Boolean,
+            required: true,
             default: true
         }
     }
@@ -76,7 +98,7 @@ userSchema.pre('save', async function (next) {
 /**
  * Compare password hashes
  */
-userSchema.methods.comparePassword = async function (candidatePassword, cb) => {
+userSchema.methods.comparePassword = async function (candidatePassword, cb) {
     try {
         let isMatch = await bcrypt.compare(candidatePassword, this.password);
         return isMatch;
