@@ -1,9 +1,12 @@
 version: "3"
 services:
+  # MongoDB for persistency
   mongo:
     image: mongo:3.6
     restart: on-failure
-  web:
+
+  # Restful backend API
+  backend:
     build: .
     restart: on-failure
     ports:

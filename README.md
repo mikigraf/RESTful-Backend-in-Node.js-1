@@ -31,6 +31,11 @@ CLIENT_ADDRESS='Sesame Street 187'
 ## Setup
 
 1. Configure .env by adding your API key pairs.
+2. Build docker images by running
+
+```bash
+docker build --no-cache .
+```
 
 ## Running the project:
 
@@ -112,3 +117,9 @@ login: **backend_app_admin**
 password: **baa@&%#/**
 
 to exercise admin rights in the database. This has been created for security.
+
+## Monitoring
+
+Monitoring is done with **Express monitor**.
+
+It's available under [http://localhost:8080/status](http://localhost:8080/status)

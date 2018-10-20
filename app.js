@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const compression = require('compression');
 const expressValidator = require('express-validator');
+
 /** 
  * Load environmental variables from .env file, where API keys and passwords are configured
  */
@@ -20,8 +21,7 @@ dotenv.load({
  * Create express server
  */
 const app = express();
-// app.use(require('express-status-monitor')());
-
+app.use(require('express-status-monitor')());
 /**
  * Initialize database connection
  */
