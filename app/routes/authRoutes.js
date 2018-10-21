@@ -10,6 +10,9 @@ const router = express.Router();
  * 
  * @apiSuccess {Object} user user object. 
  * 
+ * @apiExample {curl} Example usage:
+ *          curl --data-urlencode "email=test@test.com&username=test&password=testpassword&firstName=John&lastName=Mustermann&address=Brahmsstrasse 3 11111 Berlin&birthday=06.10.1987&status=guest"
+ * 
  * @apiError UserNotFound The id of the User was not found.
  * @apiError SignupsOff Club has deactivated registration.
  */
@@ -44,9 +47,8 @@ router.post('/login', async (req, res, next) => {
 
                 const body = {
                     _id: user._id,
-                    email: user.username
+                    username: user.username
                 };
-
                 const token = jwt.sign({
                     user: body
                 }, process.env.JWT_SECRET);

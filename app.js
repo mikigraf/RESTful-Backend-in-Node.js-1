@@ -48,6 +48,9 @@ app.use('/api/auth/', authRoutes);
 
 const protectedRoutes = require('./app/routes/protectedRoutes');
 app.use('/api/', protectedRoutes);
+
+const adminRoutes = require('./app/routes/adminRoutes');
+app.use('/admin/', adminRoutes);
 /**
  * Start Express server.
  */

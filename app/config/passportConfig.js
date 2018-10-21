@@ -29,10 +29,10 @@ module.exports = function (passport) {
             const lastName = req.body.lastName;
             const address = req.body.address;
             const birthday = req.body.birthday;
-            var status = 'guest';
-            if (req.body.status === 'member' || req.body.status === 'guest' && toBoolean(process.env.GUESTS_ALLOWED)) {
-                status = req.body.status;
-            }
+            var status = req.body.status;
+            // if (req.body.status === 'member' || req.body.status === 'guest' && toBoolean(process.env.GUESTS_ALLOWED)) {
+            //     status = req.body.status;
+            // }
 
 
             try {
@@ -92,10 +92,13 @@ module.exports = function (passport) {
 
     passport.use(new JwtStrategy({
         secretOrKey: process.env.JWT_SECRET,
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+        jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
+        passReqToCallback: true
     }, async (token, done) => {
         try {
-            return done(null, token.user)
+            console.log("token: " + token);
+            return done(null,
+                token.user)
         } catch (error) {
             done(error);
         }
