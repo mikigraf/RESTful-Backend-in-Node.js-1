@@ -45,16 +45,16 @@ docker compose-up
 
 ## Generate the documentation
 
-In order to generate the documentation, it is required to install [documentjs](https://github.com/documentationjs/documentation/blob/master/docs/GETTING_STARTED.md) module from npm.
+In order to generate the documentation, it is required to install [apidoc](http://apidocjs.com/#install) module from npm.
 
 ```bash
-npm install -g documentation
+npm install apidoc -g
 ```
 
 After that you can run
 
 ```bash
-documentation build app/routes/** -f html -o docs
+apidoc -i app/routes/ -o apidoc/
 ```
 
 This will generate **docs** directory in the main project directory containing the documentation of API routes.

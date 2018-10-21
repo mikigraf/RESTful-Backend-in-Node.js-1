@@ -3,10 +3,18 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-
+/**
+ * @api {post} /signup Register 
+ * @apiName Signup new user with local strategy
+ * @apiGroup Authentication
+ * 
+ * @apiSuccess {Object} user user object. 
+ * 
+ * @apiError UserNotFound The id of the User was not found.
+ * @apiError SignupsOff Club has deactivated registration.
+ */
 router.post('/signup', passport.authenticate('signup', {
-    session: false,
-    successRedirect: '/api/hello'
+    session: false
 }), async (req, res, next) => {
     res.json({
         message: 'Signup successful',
@@ -14,6 +22,14 @@ router.post('/signup', passport.authenticate('signup', {
     });
 });
 
+/**
+ * @api {post} /login Login 
+ * @apiName Login using local strategy
+ * @apiGroup Authentication
+ * 
+ * @apiSuccess {String} String Json Web Token for use with Authorization/Bearer header.
+ * 
+ */
 router.post('/login', async (req, res, next) => {
     passport.authenticate('login', async (err, user, info) => {
         try {
