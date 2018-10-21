@@ -22,10 +22,6 @@ dotenv.load({
  */
 const app = express();
 app.use(require('express-status-monitor')());
-/**
- * Initialize database connection
- */
-require('./app/db/index');
 
 /** 
  * Express configuration.
@@ -33,14 +29,22 @@ require('./app/db/index');
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.use(compression());
-
 app.use(logger('dev'));
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
 }));
+app.use(bodyParser.json());
 app.use(expressValidator());
 
+passport.initialize();
+require('./app/config/passportConfig')(passport);
+/**
+ * Initialize database connection
+ */
+require('./app/db/index');
+
+const authRoutes = require('./app/routes/authRoutes');
+app.use('/api', authRoutes);
 /**
  * Start Express server.
  */
