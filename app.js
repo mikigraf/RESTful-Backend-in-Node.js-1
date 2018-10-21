@@ -44,7 +44,10 @@ require('./app/config/passportConfig')(passport);
 require('./app/db/index');
 
 const authRoutes = require('./app/routes/authRoutes');
-app.use('/api', authRoutes);
+app.use('/api/auth/', authRoutes);
+
+const protectedRoutes = require('./app/routes/protectedRoutes');
+app.use('/api/', protectedRoutes);
 /**
  * Start Express server.
  */

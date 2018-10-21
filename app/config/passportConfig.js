@@ -1,6 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const toBoolean = require('to-boolean');
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const {
     User
@@ -83,6 +85,17 @@ module.exports = function (passport) {
             return done(null, user, {
                 message: 'Logged in successfully'
             });
+        } catch (error) {
+            done(error);
+        }
+    }));
+
+    passport.use(new JwtStrategy({
+        secretOrKey: process.env.JWT_SECRET,
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+    }, async (token, done) => {
+        try {
+            return done(null, token.user)
         } catch (error) {
             done(error);
         }
