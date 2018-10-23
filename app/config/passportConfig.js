@@ -90,15 +90,22 @@ module.exports = function (passport) {
         }
     }));
 
-    passport.use(new JwtStrategy({
-        secretOrKey: process.env.JWT_SECRET,
-        jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-        passReqToCallback: true
-    }, async (token, done) => {
+    var opts = {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: process.env.JWT_SECRET
+    };
+    passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
         try {
-            console.log("token: " + token);
-            return done(null,
-                token.user)
+            let err, user = await User.findOne({
+                id: jwt_payload.sub
+            });
+
+            if (err) return done(err, false);
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
         } catch (error) {
             done(error);
         }

@@ -62,4 +62,8 @@ router.post('/login', async (req, res, next) => {
     })(req, res, next);
 });
 
+router.get('/test', passport.authenticate('jwt'), (req, res, next) => {
+    console.log("user from test: " + req.user);
+    res.send('test, cant see it without token');
+})
 module.exports = router;

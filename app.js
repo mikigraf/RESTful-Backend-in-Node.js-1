@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(expressValidator());
 
-passport.initialize();
+app.use(passport.initialize());
 require('./app/config/passportConfig')(passport);
 /**
  * Initialize database connection
@@ -47,7 +47,7 @@ const authRoutes = require('./app/routes/authRoutes');
 app.use('/api/auth/', authRoutes);
 
 const protectedRoutes = require('./app/routes/protectedRoutes');
-app.use('/api/', protectedRoutes);
+app.use('/api/', passport.authenticate('jwt'), protectedRoutes);
 
 const adminRoutes = require('./app/routes/adminRoutes');
 app.use('/admin/', adminRoutes);

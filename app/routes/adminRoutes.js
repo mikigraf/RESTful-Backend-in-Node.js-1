@@ -28,7 +28,7 @@ router.post('/admin', isAdmin, async (req, res, next) => {
     }
 });
 
-router.get('/users', isAdmin, async (req, res, next) => {
+router.get('/users', passport.authenticate('jwt'), async (req, res, next) => {
     try {
         let users = await User.find({});
         res.send(users);
