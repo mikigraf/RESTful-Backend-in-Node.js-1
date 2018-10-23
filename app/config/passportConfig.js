@@ -30,10 +30,6 @@ module.exports = function (passport) {
             const address = req.body.address;
             const birthday = req.body.birthday;
             var status = req.body.status;
-            // if (req.body.status === 'member' || req.body.status === 'guest' && toBoolean(process.env.GUESTS_ALLOWED)) {
-            //     status = req.body.status;
-            // }
-
 
             try {
                 console.log("create user");

@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require('../db/models/user');
 const isAdmin = require('../middlewares/isAdmin');
 
-router.post('/admin', isAdmin, async (req, res, next) => {
+router.post('/admin', [passport.authenticate('jwt'), isAdmin], async (req, res, next) => {
     const email = req.body.email;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
@@ -28,7 +28,7 @@ router.post('/admin', isAdmin, async (req, res, next) => {
     }
 });
 
-router.get('/users', passport.authenticate('jwt'), async (req, res, next) => {
+router.get('/users', [passport.authenticate('jwt'), isAdmin], async (req, res, next) => {
     try {
         let users = await User.find({});
         res.send(users);
