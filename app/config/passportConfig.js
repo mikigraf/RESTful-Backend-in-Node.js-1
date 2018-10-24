@@ -6,6 +6,7 @@ const toBoolean = require('to-boolean');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const pswgen = require('generate-password');
+const emailTransporter = require('./nodemailerConfig');
 
 const {
     User
@@ -118,7 +119,7 @@ module.exports = function (passport) {
                     try {
                         const user = await User.create({
                             'email': email,
-                            'username': username,
+                            'username': email,
                             'password': password,
                             'profile.firstName': firstName,
                             'profile.lastName': lastName,
@@ -126,6 +127,13 @@ module.exports = function (passport) {
                             'facebook': profile.id
                         });
 
+                        const mailOptions = {
+                            from: process.env.CLIENT_EMAIL_ADDRESS,
+                            to: email,
+                            subject: 'Welcome to WSIT!',
+                            text: 'Welcome to WSIT! Your can login with Facebook or login using your email address and password: ' + password
+                        };
+                        emailTransporter.sendMail(mailOptions);
                         return done(null, user);
                     } catch (error) {
                         return done(error);
@@ -167,13 +175,21 @@ module.exports = function (passport) {
                     try {
                         const user = await User.create({
                             'email': email,
-                            'username': username,
+                            'username': email,
                             'password': password,
                             'profile.firstName': firstName,
                             'profile.lastName': lastName,
                             'status': process.env.DEFAULT_STATUS_FOR_REGISTERED_USER,
                             'google': profile.id
                         });
+
+                        const mailOptions = {
+                            from: process.env.CLIENT_EMAIL_ADDRESS,
+                            to: email,
+                            subject: 'Welcome to WSIT!',
+                            text: 'Welcome to WSIT! Your can login with Google or login using your email address and password: ' + password
+                        };
+                        emailTransporter.sendMail(mailOptions);
 
                         return done(null, user);
                     } catch (error) {

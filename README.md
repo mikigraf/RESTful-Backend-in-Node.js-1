@@ -123,3 +123,18 @@ to exercise admin rights in the database. This has been created for security.
 Monitoring is done with **Express monitor**.
 
 It's available under [http://localhost:8080/status](http://localhost:8080/status)
+
+## Login/Registration
+
+Login and registration are possible by using:
+
+- combination of username and password
+- Facebook authentication
+- Google authentication
+
+For users using Facebook and Google it will be possible to authenticate using username and password. Email address can be used as username and their password will be sent to their email address after registration.
+
+## Setting up email adress
+
+In order to setup emails, configure environmental variables accordingly.
+For GMAIL it is necessary to [Allow less secure apps](https://myaccount.google.com/u/4/lesssecureapps?pageId=none&pli=1)
