@@ -142,7 +142,7 @@ router.get('/google/callback', passport.authenticate('google'), async (req, res,
 router.post('/forgot', async (req, res, next) => {
     try {
         let user = await User.findOne({
-            'username': req.body.username
+            'email': req.body.email
         });
 
         if (user) {
