@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const compression = require('compression');
 const expressValidator = require('express-validator');
+const helmet = require('helmet');
 
 /** 
  * Load environmental variables from .env file, where API keys and passwords are configured
@@ -28,6 +29,7 @@ app.use(require('express-status-monitor')());
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
+app.use(helmet());
 app.use(compression());
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({
