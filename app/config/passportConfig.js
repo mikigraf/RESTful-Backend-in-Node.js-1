@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
+const GoogleStrategy = require('passport-google-oauth20');
 const toBoolean = require('to-boolean');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -137,6 +138,54 @@ module.exports = function (passport) {
             return done(error);
         }
 
+    }));
+
+    passport.use(new GoogleStrategy({
+        clientID: process.env.GOOGLE_ID,
+        clientSecret: process.env.GOOGLE_SECRET,
+        callbackURL: "/api/auth/google/callback",
+        passReqToCallback: true
+    }, async (req, accessToken, refreshToken, profile, done) => {
+        try {
+            let user = await User.findOne({
+                'google': profile.id
+            });
+
+            if (user) {
+                return done(null, user);
+            } else {
+                if (toBoolean(process.env.ACCEPTING_SIGNUPS)) {
+                    const email = profile.emails[0].value;
+                    const firstName = profile.name.givenName;
+                    const lastName = profile.name.familyName;
+                    const username = profile.displayName;
+                    const password = pswgen.generate({
+                        length: 10,
+                        numbers: true
+                    });
+
+                    try {
+                        const user = await User.create({
+                            'email': email,
+                            'username': username,
+                            'password': password,
+                            'profile.firstName': firstName,
+                            'profile.lastName': lastName,
+                            'status': process.env.DEFAULT_STATUS_FOR_REGISTERED_USER,
+                            'google': profile.id
+                        });
+
+                        return done(null, user);
+                    } catch (error) {
+                        return done(error);
+                    }
+                } else {
+                    return done(null, false);
+                }
+            }
+        } catch (error) {
+            return done(error);
+        }
     }));
 
     var opts = {

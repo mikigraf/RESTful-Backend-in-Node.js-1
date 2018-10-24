@@ -94,26 +94,37 @@ router.get('/facebook/callback', passport.authenticate('facebook'), async (req, 
     }
 });
 
-// router.get('/facebook/callback', async (req, res, next) => {
-//     passport.authenticate('facebook', (err, user, info) => {
-//         console.log("CALLBACK FACEBOOK")
-//         req.login(user, {
-//             session: false
-//         }, async (error) => {
-//             if (error) return next(error);
+router.get('/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+}))
 
-//             const body = {
-//                 _id: user._id,
-//                 username: user.username
-//             };
-//             const token = jwt.sign({
-//                 user: body
-//             }, process.env.JWT_SECRET);
-//             return res.json({
-//                 token
-//             });
-//         });
-//     });
-// });
+router.get('/google/callback', passport.authenticate('google'), async (req, res, next) => {
+    try {
+        if (!req.user) {
+            const error = new Error('An error occured');
+            return next(error);
+        }
 
+        req.login(req.user, {
+            session: false
+        }, async (error) => {
+            if (error) return next(error);
+
+            const body = {
+                _id: req.user.id,
+                username: req.user.username
+            };
+
+            const token = jwt.sign({
+                user: body
+            }, process.env.JWT_SECRET);
+
+            return res.json({
+                token
+            });
+        });
+    } catch (error) {
+        return next(error);
+    }
+})
 module.exports = router;
