@@ -62,4 +62,58 @@ router.post('/login', async (req, res, next) => {
     })(req, res, next);
 });
 
+router.get('/facebook', passport.authenticate('facebook', {
+    scope: ['email']
+}));
+
+router.get('/facebook/callback', passport.authenticate('facebook'), async (req, res, next) => {
+    console.log('callback and user in req is: ' + req.user);
+    try {
+        if (!req.user) {
+            const error = new Error('An error occured');
+            return next(error);
+        }
+        req.login(req.user, {
+            session: false
+        }, async (error) => {
+            if (error) return next(error);
+
+            const body = {
+                _id: req.user._id,
+                username: req.user.username
+            };
+            const token = jwt.sign({
+                user: body
+            }, process.env.JWT_SECRET);
+            return res.json({
+                token
+            });
+        });
+    } catch (error) {
+        return next(error);
+    }
+});
+
+// router.get('/facebook/callback', async (req, res, next) => {
+//     passport.authenticate('facebook', (err, user, info) => {
+//         console.log("CALLBACK FACEBOOK")
+//         req.login(user, {
+//             session: false
+//         }, async (error) => {
+//             if (error) return next(error);
+
+//             const body = {
+//                 _id: user._id,
+//                 username: user.username
+//             };
+//             const token = jwt.sign({
+//                 user: body
+//             }, process.env.JWT_SECRET);
+//             return res.json({
+//                 token
+//             });
+//         });
+//     });
+// });
+
 module.exports = router;

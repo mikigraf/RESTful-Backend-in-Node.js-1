@@ -1,8 +1,10 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const toBoolean = require('to-boolean');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
+const pswgen = require('generate-password');
 
 const {
     User
@@ -84,6 +86,57 @@ module.exports = function (passport) {
         } catch (error) {
             done(error);
         }
+    }));
+
+    passport.use(new FacebookStrategy({
+        clientID: process.env.FACEBOOK_APP_ID,
+        clientSecret: process.env.FACEBOOK_APP_SECRET,
+        callbackURL: '/api/auth/facebook/callback',
+        profileFields: ['id', 'displayName', 'photos', 'emails']
+    }, async (req, accessToken, refreshToken, profile, done) => {
+        try {
+            let user = await User.findOne({
+                'facebook': profile.id
+            });
+
+            // user has been found
+            if (user) {
+                return done(null, user);
+            } else {
+                //user does not exist yet
+                if (toBoolean(process.env.ACCEPTING_SIGNUPS)) {
+                    const email = profile.emails[0].value;
+                    const firstName = profile.displayName.split(' ')[0];
+                    const lastName = profile.displayName.split(' ')[1];
+                    const username = profile.displayName;
+                    const password = pswgen.generate({
+                        length: 10,
+                        numbers: true
+                    });
+
+                    try {
+                        const user = await User.create({
+                            'email': email,
+                            'username': username,
+                            'password': password,
+                            'profile.firstName': firstName,
+                            'profile.lastName': lastName,
+                            'status': process.env.DEFAULT_STATUS_FOR_REGISTERED_USER,
+                            'facebook': profile.id
+                        });
+
+                        return done(null, user);
+                    } catch (error) {
+                        return done(error);
+                    }
+                } else {
+                    return done(null, false);
+                }
+            }
+        } catch (error) {
+            return done(error);
+        }
+
     }));
 
     var opts = {

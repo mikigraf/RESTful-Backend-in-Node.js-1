@@ -37,8 +37,14 @@ const userSchema = new mongoose.Schema({
     passwordResetToken: String,
     passwordResetExpires: Date,
 
-    facebook: String,
-    google: String,
+    facebook: {
+        type: String,
+        default: '0'
+    },
+    google: {
+        type: String,
+        default: '0'
+    },
 
     profile: {
         firstName: {
@@ -50,12 +56,10 @@ const userSchema = new mongoose.Schema({
             required: true
         },
         address: {
-            type: String,
-            required: true
+            type: String
         },
         birthday: {
-            type: Date,
-            required: true
+            type: Date
         },
     },
 
