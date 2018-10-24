@@ -119,7 +119,7 @@ module.exports = function (passport) {
                     try {
                         const user = await User.create({
                             'email': email,
-                            'username': email,
+                            'username': username,
                             'password': password,
                             'profile.firstName': firstName,
                             'profile.lastName': lastName,
@@ -131,7 +131,7 @@ module.exports = function (passport) {
                             from: process.env.CLIENT_EMAIL_ADDRESS,
                             to: email,
                             subject: 'Welcome to WSIT!',
-                            text: 'Welcome to WSIT! Your can login with Facebook or login using your email address and password: ' + password
+                            text: 'Welcome to WSIT! Your can login with Facebook or login using your username: ' + username + ' and password: ' + password
                         };
                         emailTransporter.sendMail(mailOptions);
                         return done(null, user);
@@ -175,7 +175,7 @@ module.exports = function (passport) {
                     try {
                         const user = await User.create({
                             'email': email,
-                            'username': email,
+                            'username': username,
                             'password': password,
                             'profile.firstName': firstName,
                             'profile.lastName': lastName,
@@ -187,7 +187,7 @@ module.exports = function (passport) {
                             from: process.env.CLIENT_EMAIL_ADDRESS,
                             to: email,
                             subject: 'Welcome to WSIT!',
-                            text: 'Welcome to WSIT! Your can login with Google or login using your email address and password: ' + password
+                            text: 'Welcome to WSIT! Your can login with Google or login using your username: ' + username + ' and password: ' + password
                         };
                         emailTransporter.sendMail(mailOptions);
 

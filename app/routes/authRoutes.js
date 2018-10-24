@@ -2,6 +2,9 @@ const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const User = require('../db/models/user');
+const pswgen = require('generate-password');
+const emailTransporter = require('../config/nodemailerConfig');
 
 /**
  * @api {post} /signup Register 
@@ -126,5 +129,42 @@ router.get('/google/callback', passport.authenticate('google'), async (req, res,
     } catch (error) {
         return next(error);
     }
-})
+});
+
+/**
+ * @api {post} /forgot Forgot Password 
+ * @apiName Remind users password
+ * @apiGroup Authentication
+ * 
+ * @apiSuccess {String} email address of registered user. 
+ * 
+ */
+router.post('/forgot', async (req, res, next) => {
+    try {
+        let user = await User.findOne({
+            'email': req.body.email
+        });
+
+        if (user) {
+            const password = pswgen.generate({
+                length: 10,
+                numbers: true
+            });
+
+            user.password = password;
+
+            user.save();
+
+            const mailOptions = {
+                from: process.env.CLIENT_EMAIL_ADDRESS,
+                to: user.email,
+                subject: 'Password reminder from WSIT',
+                text: 'Password: ' + password + ' login: ' + user.username
+            };
+            emailTransporter.sendMail(mailOptions);
+        }
+    } catch (error) {
+        return next(error);
+    }
+});
 module.exports = router;
