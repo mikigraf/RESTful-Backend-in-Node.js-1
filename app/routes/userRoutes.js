@@ -83,7 +83,19 @@ router.get('/users/:id', [passport.authenticate('jwt', {
     }
 ]
  */
-router.post('/users');
+router.post('/users', [passport.authenticate('jwt', {
+    session: false
+}), isAdmin], async (req, res, next) => {
+    try {
+        let users = await User.insertMany(req.users);
+        if (!users) {
+            res.status(500).send('Internal server error');
+        }
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).send('Internal server error');
+    }
+});
 
 /**
  * @api {delete} /users/:id Delete user
