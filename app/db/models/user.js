@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = require("mongoose").Schema;
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
 const validate = require('mongoose-validator');
@@ -89,7 +90,11 @@ const userSchema = new mongoose.Schema({
     activated: {
         type: Boolean,
         default: process.env.ACTIVE_AFTER_SIGNUP
-    }
+    },
+    teams: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Team'
+    }]
 }, {
     timestamps: true
 });

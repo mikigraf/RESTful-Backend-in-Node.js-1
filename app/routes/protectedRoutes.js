@@ -8,6 +8,7 @@ router.get('/hello',
         session: false
     }),
     async (req, res, next) => {
+        console.log("req user: " + req.user);
         res.send('hello');
     });
 

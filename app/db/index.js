@@ -21,3 +21,4 @@ mongoose.connection.on('error', (err) => {
 });
 
 module.exports.User = require("./models/user");
+module.exports.Team = require('./models/team');
