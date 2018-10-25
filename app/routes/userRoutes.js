@@ -110,4 +110,18 @@ router.post('/users', [passport.authenticate('jwt', {
  *          curl 
  * 
  */
-router.delete('/users/:id');
+router.delete('/users/:id', [passport.authenticate('jwt'), isAdmin], async (req, res, next) => {
+    try {
+        let err = await User.remove({
+            _id: req.params.id
+        });
+
+        if (err) {
+            res.status(500).send('Internal server error');
+        }
+
+        res.status(200).send('User has been deleted succesfully');
+    } catch (error) {
+        res.status(500).send('Internal server error');
+    }
+});
