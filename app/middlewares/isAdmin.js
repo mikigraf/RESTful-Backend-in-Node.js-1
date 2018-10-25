@@ -7,9 +7,10 @@ async function isAdmin(req, res, next) {
             return next();
         }
     } catch (error) {
-        next(error);
+        res.status(500);
+        return next(error);
     }
-    res.send(403);
+    res.status(401).send('Unathorized');
 }
 
 module.exports = isAdmin;

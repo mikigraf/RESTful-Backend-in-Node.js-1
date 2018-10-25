@@ -134,6 +134,10 @@ Login and registration are possible by using:
 
 For users using Facebook and Google it will be possible to authenticate using username and password. Email address can be used as username and their password will be sent to their email address after registration.
 
+For social auth with Google, create credentials for Google+ API in the Google Developer Console.
+
+For Facebook, create credentials for Facebook Login API.
+
 ## Setting up email adress
 
 In order to setup emails, configure environmental variables accordingly.
