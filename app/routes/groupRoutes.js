@@ -43,7 +43,7 @@ router.get('/teams', [passport.authenticate('jwt', {
  * 
  * @apiParam {Number} id Teams unique ID.
  * 
- * @apiSuccess {User} JSON object containing team data. 
+ * @apiSuccess {Team} JSON object containing team data. 
  * 
  * 
  */
@@ -53,6 +53,36 @@ router.get('/teams/:id', [passport.authenticate('jwt', {
     try {
         let team = await User.findById(req.params.id);
         res.status(200).json(team);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
+
+/**
+ * @api {post} /teams/:id/add Add member
+ * @apiName Add member to the team
+ * @apiGroup Teams
+ * 
+ * @apiParam {Number} id Teams unique ID.
+ * 
+ * @apiSuccess {Team} JSON object containing team data. 
+ * 
+ * 
+ */
+router.post('/teams/:id/add', passport.authenticate('jwt', {
+    session: false
+}), async (req, res, next) => {
+    try {
+        var team = await Team.findById(req.params.id);
+        if (req.user.status === 'admin' || team.leaders.indexOf(req.user._id)) {
+            var new_member = await User.findById(req.query.new_member_id);
+            team.members.push(req.query.new_member._id);
+            new_member.groups.push(team._id);
+            team.save();
+            new_member.save();
+            res.status(200).send(team);
+        }
+        res.status(401).send('Unauthorized.');
     } catch (error) {
         res.status(500).json(error);
     }
