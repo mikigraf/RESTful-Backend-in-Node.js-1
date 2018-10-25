@@ -136,13 +136,13 @@ router.get('/google/callback', passport.authenticate('google'), async (req, res,
  * @apiName Remind users password
  * @apiGroup Authentication
  * 
- * @apiSuccess {String} email address of registered user. 
+ * @apiSuccess {String} username of registered user. 
  * 
  */
 router.post('/forgot', async (req, res, next) => {
     try {
         let user = await User.findOne({
-            'email': req.body.email
+            'username': req.body.username
         });
 
         if (user) {
