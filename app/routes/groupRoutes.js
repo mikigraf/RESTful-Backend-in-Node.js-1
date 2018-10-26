@@ -74,7 +74,7 @@ router.post('/teams/:id/add', passport.authenticate('jwt', {
 }), async (req, res, next) => {
     try {
         var team = await Team.findById(req.params.id);
-        if (req.user.status === 'admin' || team.leaders.indexOf(req.user._id)) {
+        if (req.user.status === 'admin' || team.leaders.indexOf(req.user._id) > -1) {
             var new_member = await User.findById(req.query.new_member_id);
             team.members.push(req.query.new_member._id);
             new_member.groups.push(team._id);
@@ -88,6 +88,35 @@ router.post('/teams/:id/add', passport.authenticate('jwt', {
     }
 });
 
+// remove member
+router.delete('/teams/:id/remove', passport.authenticate('jwt', {
+    session: false
+}), async (req, res, next) => {
+    try {
+        var team = await Team.findById(req.params.id);
+        if (req.user.status === 'admin' || team.leaders.indexOf(req.user._id) > -1) {
+            var member = await User.findById(req.query.member_id);
+            const memberIndex = team.members.indexOf(member._id);
+            const teamIndex = member.teams.indexOf(req.params.id);
+            if (memberIndex > -1 && teamIndex > -1) {
+                team.members = team.members.splice(memberIndex, 1);
+                member.teams = member.teams.splice(teamIndex, 1);
 
+                team.save();
+                member.save();
+
+                res.status(200).send('User has been removed succesfully from team.');
+            } else {
+                res.status(500).send('Error');
+            }
+        }
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
+
+// add leader
+
+// remove leader
 
 // delete team
