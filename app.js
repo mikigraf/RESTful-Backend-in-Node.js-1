@@ -51,6 +51,12 @@ app.use('/api/auth/', authRoutes);
 const protectedRoutes = require('./app/routes/protectedRoutes');
 app.use('/api/', passport.authenticate('jwt'), protectedRoutes);
 
+const userRoutes = require('./app/routes/userRoutes');
+app.use('/api/', passport.authenticate('jwt'), userRoutes);
+
+const teamRoutes = require('./app/routes/teamRoutes');
+app.use('/api/', passport.authenticate('jwt'), teamRoutes);
+
 /**
  * Start Express server.
  */

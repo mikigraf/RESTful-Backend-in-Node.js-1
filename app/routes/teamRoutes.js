@@ -36,6 +36,21 @@ router.get('/teams', [passport.authenticate('jwt', {
     }
 });
 
+router.post('/teams', passport.authenticate('jwt', {
+    session: false
+}), async (req, res, next) => {
+    try {
+        let team = await Team.create({
+            'leaders': [req.user.id],
+            'members': [req.user.id]
+        });
+
+        res.status(200).send(team);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
+
 /**
  * @api {get} /teams/:id Team data
  * @apiName Get team data
@@ -76,13 +91,14 @@ router.post('/teams/:id/add', passport.authenticate('jwt', {
         var team = await Team.findById(req.params.id);
         if (req.user.status === 'admin' || team.leaders.indexOf(req.user._id) > -1) {
             var new_member = await User.findById(req.query.new_member_id);
-            team.members.push(req.query.new_member._id);
-            new_member.groups.push(team._id);
+            team.members.push(req.query.new_member_id);
+            new_member.teams.push(team._id);
             team.save();
             new_member.save();
             res.status(200).send(team);
+        } else {
+            res.status(401).send('Unauthorized.');
         }
-        res.status(401).send('Unauthorized.');
     } catch (error) {
         res.status(500).json(error);
     }
@@ -142,3 +158,5 @@ router.delete('/teams/:id', passport.authenticate('jwt', {
         res.status(500).json(error);
     }
 });
+
+module.exports = router;

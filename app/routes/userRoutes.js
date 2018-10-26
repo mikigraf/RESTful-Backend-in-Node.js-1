@@ -170,3 +170,5 @@ router.delete('/users/:id', [passport.authenticate('jwt'), isAdmin], async (req,
         res.status(500).send('Internal server error');
     }
 });
+
+module.exports = router;
