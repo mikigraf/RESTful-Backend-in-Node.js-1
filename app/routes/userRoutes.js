@@ -4,7 +4,20 @@ const router = express.Router();
 const {
     User
 } = require('../db/index');
-const isAdmin = require('../middlewares/isAdmin');
+// const isAdmin = require('../middlewares/isAdmin');
+async function isAdmin(req, res, next) {
+    try {
+        let user = await User.findById(req.user._id);
+        if (user.status.localeCompare('admin') === '0') {
+            next();
+        }
+    } catch (error) {
+        res.status(500);
+        next(error);
+    }
+    res.status(401);
+    next();
+}
 
 const userController = require('../controllers/userController');
 
@@ -32,9 +45,17 @@ router.get('/users', [passport.authenticate('jwt', {
  * 
  * 
  */
-router.get('/users/:id', [passport.authenticate('jwt', {
+router.get('/users/:id', passport.authenticate('jwt', {
     session: false
-})], userController.getUserData);
+}), async (req, res, next) => {
+    try {
+        let user = await User.findById(req.params.id);
+        // res.status(200).json(user);
+        res.status(200).send(user);
+    } catch (error) {
+        res.status(500).send('Internal server error');
+    }
+});
 
 /**
  * @api {post} /users
@@ -60,8 +81,9 @@ router.get('/users/:id', [passport.authenticate('jwt', {
 router.post('/users', [passport.authenticate('jwt', {
     session: false
 }), isAdmin], async (req, res, next) => {
+    console.log("User zalgoowany wg JWT: " + req.user);
     try {
-        let users = await User.insertMany(req.users);
+        let users = await User.insertMany(req.body);
         if (!users) {
             res.status(500).send('Internal server error');
         }
@@ -123,7 +145,9 @@ router.post('/users/:id', passport.authenticate('jwt', {
  *          curl 
  * 
  */
-router.delete('/users/:id', [passport.authenticate('jwt'), isAdmin], async (req, res, next) => {
+router.delete('/users/:id', [passport.authenticate('jwt', {
+    session: false
+}), isAdmin], async (req, res, next) => {
     try {
         let err = await User.remove({
             _id: req.params.id

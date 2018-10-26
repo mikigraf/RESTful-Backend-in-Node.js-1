@@ -22,7 +22,7 @@ const emailTransporter = require('../config/nodemailerConfig');
 router.post('/signup', passport.authenticate('signup', {
     session: false
 }), async (req, res, next) => {
-    res.json({
+    res.status(200).json({
         message: 'Signup successful',
         user: req.user
     });
@@ -70,7 +70,6 @@ router.get('/facebook', passport.authenticate('facebook', {
 }));
 
 router.get('/facebook/callback', passport.authenticate('facebook'), async (req, res, next) => {
-    console.log('callback and user in req is: ' + req.user);
     try {
         if (!req.user) {
             const error = new Error('An error occured');

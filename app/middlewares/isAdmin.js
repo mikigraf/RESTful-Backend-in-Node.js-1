@@ -3,14 +3,16 @@ const jwt = require('jsonwebtoken');
 
 async function isAdmin(req, res, next) {
     try {
-        if (req.user.status === 'admin') {
-            return next();
+        let user = await User.findById(req.user._id);
+        if (user.status.localeCompare('admin') === '0') {
+            next();
         }
     } catch (error) {
         res.status(500);
-        return next(error);
+        next(error);
     }
-    res.status(401).send('Unathorized');
+    res.status(401);
+    next();
 }
 
 module.exports = isAdmin;

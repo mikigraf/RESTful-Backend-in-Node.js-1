@@ -25,9 +25,7 @@ module.exports = function (passport) {
         passwordField: 'password',
         passReqToCallback: true
     }, async (req, username, password, done) => {
-        console.log("sign");
         if (toBoolean(process.env.ACCEPTING_SIGNUPS)) {
-            console.log("if");
             const email = req.body.email;
             const firstName = req.body.firstName;
             const lastName = req.body.lastName;
@@ -36,7 +34,6 @@ module.exports = function (passport) {
             var status = req.body.status;
 
             try {
-                console.log("create user");
                 const user = await User.create({
                     'email': email,
                     'username': username,
@@ -65,6 +62,8 @@ module.exports = function (passport) {
             const user = await User.findOne({
                 'username': username
             });
+
+
 
             // User wasn't found
             if (!user) {
