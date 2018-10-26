@@ -95,6 +95,101 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/api/teams/:id/add",
+    "title": "Add member",
+    "name": "Add_member_to_the_team",
+    "group": "Teams",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Teams unique ID.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Team",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>object containing team data.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/routes/teamRoutes.js",
+    "groupTitle": "Teams"
+  },
+  {
+    "type": "get",
+    "url": "/api/teams",
+    "title": "All teams",
+    "name": "Get_list_of_all_teams",
+    "group": "Teams",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "array",
+            "description": "<p>of team id's.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/routes/teamRoutes.js",
+    "groupTitle": "Teams"
+  },
+  {
+    "type": "get",
+    "url": "/api/teams/:id",
+    "title": "Team data",
+    "name": "Get_team_data",
+    "group": "Teams",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Teams unique ID.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Team",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>object containing team data.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/routes/teamRoutes.js",
+    "groupTitle": "Teams"
+  },
+  {
+    "type": "post",
     "url": "/users",
     "title": "",
     "name": "Create_user",
@@ -174,19 +269,6 @@ define({ "api": [
     "title": "All users",
     "name": "Get_list_of_all_users",
     "group": "Users",
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Arr",
-            "optional": false,
-            "field": "sdad",
-            "description": ""
-          }
-        ]
-      }
-    },
     "success": {
       "fields": {
         "Success 200": [
@@ -200,13 +282,6 @@ define({ "api": [
         ]
       }
     },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl",
-        "type": "curl"
-      }
-    ],
     "version": "0.0.0",
     "filename": "app/routes/userRoutes.js",
     "groupTitle": "Users"
@@ -216,6 +291,42 @@ define({ "api": [
     "url": "/users/:id",
     "title": "User data",
     "name": "Get_user_data",
+    "group": "Users",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Users unique ID.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "User",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>object containing user data.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/routes/userRoutes.js",
+    "groupTitle": "Users"
+  },
+  {
+    "type": "post",
+    "url": "/users/:id",
+    "title": "Update user",
+    "name": "Update_user_data",
     "group": "Users",
     "parameter": {
       "fields": {
