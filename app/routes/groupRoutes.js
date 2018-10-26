@@ -89,7 +89,7 @@ router.post('/teams/:id/add', passport.authenticate('jwt', {
 });
 
 // remove member
-router.delete('/teams/:id/remove', passport.authenticate('jwt', {
+router.delete('/teams/:id/member', passport.authenticate('jwt', {
     session: false
 }), async (req, res, next) => {
     try {
@@ -117,6 +117,28 @@ router.delete('/teams/:id/remove', passport.authenticate('jwt', {
 
 // add leader
 
+
 // remove leader
 
 // delete team
+router.delete('/teams/:id', passport.authenticate('jwt', {
+    session: false
+}), async (req, res, next) => {
+    try {
+        let team = await Team.findById(id);
+        if (req.user.status === 'admin' || team.leaders.indexOf(req.user._id) > -1) {
+            let err = await Team.remove({
+                _id: req.params.id
+            });
+
+            if (err) {
+                res.status(401).send('Unauthorized');
+            }
+
+            res.status(200).send('Team has been deleted succesfully.');
+        }
+        res.status(401).send('Unauthorized');
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
