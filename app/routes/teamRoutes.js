@@ -9,7 +9,7 @@ const {
 const isAdmin = require('../middlewares/isAdmin');
 
 /**
- * @api {get} /teams All teams
+ * @api {get} /api/teams All teams
  * @apiName Get list of all teams
  * @apiGroup Teams
  * 
@@ -52,7 +52,7 @@ router.post('/teams', passport.authenticate('jwt', {
 });
 
 /**
- * @api {get} /teams/:id Team data
+ * @api {get} /api/teams/:id Team data
  * @apiName Get team data
  * @apiGroup Teams
  * 
@@ -74,7 +74,7 @@ router.get('/teams/:id', [passport.authenticate('jwt', {
 });
 
 /**
- * @api {post} /teams/:id/add Add member
+ * @api {post} /api/teams/:id/add Add member
  * @apiName Add member to the team
  * @apiGroup Teams
  * 

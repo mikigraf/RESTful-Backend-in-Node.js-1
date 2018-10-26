@@ -6,9 +6,16 @@ const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useNewUrlParser', true);
-mongoose.connect(process.env.MONGODB_URI, {
-    keepAlive: true
-});
+if (process.env.env === 'DEV') {
+    mongoose.connect(process.env.MONGODB_URI_DEV, {
+        keepAlive: true
+    });
+} else {
+    // production
+    mongoose.connect(process.env.MONGODB_URI, {
+        keepAlive: true
+    });
+}
 
 mongoose.connection.on('connected', (success) => {
     console.log(chalk.green('✓ '), chalk.green('MongoDB connection was succesful.'));

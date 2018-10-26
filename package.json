@@ -4,7 +4,8 @@
   "description": "Restful backend API for Wann Spiele Ich Tennis",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "SET NODE_ENV=dev && node app.js",
+    "test": "mocha --timeout 20000"
   },
   "author": "Mikolaj Wawrzyniak",
   "license": "ISC",
@@ -30,6 +31,7 @@
     "jsonwebtoken": "^8.3.0",
     "lusca": "^1.6.1",
     "mocha": "^5.2.0",
+    "mongo-mock": "^3.3.2",
     "mongo-store": "0.0.2",
     "mongoose": "^5.3.4",
     "mongoose-validator": "^2.1.0",
@@ -43,5 +45,12 @@
     "passport-local": "^1.0.0",
     "request": "^2.88.0",
     "to-boolean": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "mocha": "^2.4.5",
+    "sinon": "^7.1.0",
+    "supertest": "^3.3.0"
   }
 }
