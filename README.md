@@ -40,7 +40,14 @@ docker build --no-cache .
 ## Running the project:
 
 ```bash
-docker compose-up
+docker-compose up --build
+```
+
+## if dependencies cannot be found:
+
+```bash
+docker-compose down
+docker-compose up --build
 ```
 
 ## Generate the documentation
