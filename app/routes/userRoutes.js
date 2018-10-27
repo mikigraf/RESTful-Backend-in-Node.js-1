@@ -4,20 +4,7 @@ const router = express.Router();
 const {
     User
 } = require('../db/index');
-// const isAdmin = require('../middlewares/isAdmin');
-async function isAdmin(req, res, next) {
-    try {
-        let user = await User.findById(req.user._id);
-        if (user.status.localeCompare('admin') === '0') {
-            next();
-        }
-    } catch (error) {
-        res.status(500);
-        next(error);
-    }
-    res.status(401);
-    next();
-}
+const isAdmin = require('../middlewares/isAdmin');
 
 const userController = require('../controllers/userController');
 
@@ -30,9 +17,7 @@ const userController = require('../controllers/userController');
  * 
  * 
  */
-router.get('/users', [passport.authenticate('jwt', {
-    session: false
-}), isAdmin], userController.getAllUsers);
+router.get('/users', isAdmin, userController.getAllUsers);
 
 /**
  * @api {get} /users/:id User data
@@ -45,9 +30,7 @@ router.get('/users', [passport.authenticate('jwt', {
  * 
  * 
  */
-router.get('/users/:id', passport.authenticate('jwt', {
-    session: false
-}), async (req, res, next) => {
+router.get('/users/:id', async (req, res, next) => {
     try {
         let user = await User.findById(req.params.id);
         // res.status(200).json(user);
@@ -81,7 +64,6 @@ router.get('/users/:id', passport.authenticate('jwt', {
 router.post('/users', [passport.authenticate('jwt', {
     session: false
 }), isAdmin], async (req, res, next) => {
-    console.log("User zalgoowany wg JWT: " + req.user);
     try {
         let users = await User.insertMany(req.body);
         if (!users) {

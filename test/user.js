@@ -88,43 +88,6 @@ var member1Token = "";
 var member2Token = "";
 var guestToken = "";
 
-// before(async (done) => {
-//     await User.deleteMany({});
-//     await User.create(admin);
-//     await User.create(member);
-//     await User.create(member2);
-//     await User.create(guest);
-//     return done();
-// });
-// Empty up the database
-
-// get JWT token of admin
-// describe('## root user', () => {
-//     it('should get valid JWT token for admin', () => {
-//         request(server).post('/api/auth/login').send({
-//             username: admin.username,
-//             password: admin.password
-//         }).expect(200).then((res) => {
-//             expect(res.body).to.have.property('token');
-//             adminToken = `Bearer ${res.body.token}`;
-//             console.log(adminToken);
-//         })
-//     })
-// });
-
-// before(() => {
-//     it('should get valid JWT token for admin', () => {
-//         request(server).post('/api/auth/login').send({
-//             username: admin.username,
-//             password: admin.password
-//         }).expect(200).then((res) => {
-//             expect(res.body).to.have.property('token');
-//             adminToken = `Bearer ${res.body.token}`;
-//             console.log(adminToken);
-//         })
-//     })
-// });
-
 const new_user = {
     email: "1@guest.com",
     username: "new",
@@ -154,13 +117,7 @@ describe("Users", () => {
         // delete users
         User.deleteMany({}, () => {
             // recreate all users
-            User.insertMany([member, member2, guest], () => {
-                // request(server)
-                //     .post("/api/auth/signup")
-                //     .send(admin)
-                //     .then(res => {
-                //     });
-            });
+            User.insertMany([member, member2, guest], () => {});
         });
 
         request(server)
@@ -182,7 +139,6 @@ describe("Users", () => {
             .then(res => {
                 expect(res.body).to.have.property("token");
                 adminToken = `Bearer ${res.body.token}`;
-                console.log(adminToken);
                 done();
             });
     });
@@ -195,9 +151,9 @@ describe("Users", () => {
                 .set("authorization", adminToken)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a("array");
+                    res.body.should.be.a("object");
                     User.find({}, (err, users) => {
-                        res.body.length.should.be.eql(users.length);
+                        res.body["users"].length.should.be.eql(users.length);
                         done();
                     });
                 });
@@ -219,6 +175,19 @@ describe("Users", () => {
                         expect(res.body).to.have.property("profile");
                         done();
                     });
+            });
+        });
+    });
+
+    describe("/GET user without authorized token", () => {
+        it("should return 401", done => {
+            User.findOne({
+                username: member.username
+            }).then(user => {
+                chai.request(server).get("/api/users/" + user._id).end((err, res) => {
+                    res.should.have.status(401);
+                    done();
+                });
             });
         });
     });

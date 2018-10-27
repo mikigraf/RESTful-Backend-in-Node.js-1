@@ -45,7 +45,7 @@ router.post('/teams', passport.authenticate('jwt', {
             'members': [req.user.id]
         });
 
-        res.status(200).send(team);
+        res.status(201).send(team);
     } catch (error) {
         res.status(500).json(error);
     }

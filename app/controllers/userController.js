@@ -8,16 +8,24 @@ const isAdmin = require('../middlewares/isAdmin');
 
 module.exports.getAllUsers = async (req, res, next) => {
     try {
+        // pagination
+        var page = parseInt(req.query.page) || 0;
+        var limit = parseInt(req.query.limit) || 100;
+
         if (Object.keys(req.query).length === 0) {
             // no query parameters. Find all users without any filtering.
-            let users = await User.find({});
+            let users = await User.find({}).skip(page * limit).limit(limit);
+            let count = await User.find({}).countDocuments();
             if (!users) {
                 res.status(404).send('It seems like there are no users.');
             }
             // extract id's
             const ids = users.map(u => u._id);
             // return array containing ids of users
-            res.status(200).json(ids);
+            res.status(200).json({
+                'count': count,
+                'users': ids
+            });
         } else {
             // query parameters specified
             let users = await User.find(req.query);

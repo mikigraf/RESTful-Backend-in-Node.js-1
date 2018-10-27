@@ -22,7 +22,7 @@ const emailTransporter = require('../config/nodemailerConfig');
 router.post('/signup', passport.authenticate('signup', {
     session: false
 }), async (req, res, next) => {
-    res.status(200).json({
+    res.status(201).json({
         message: 'Signup successful',
         user: req.user
     });
@@ -161,6 +161,7 @@ router.post('/forgot', async (req, res, next) => {
                 text: 'Password: ' + password + ' login: ' + user.username
             };
             emailTransporter.sendMail(mailOptions);
+            res.send(200);
         }
     } catch (error) {
         return next(error);

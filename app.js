@@ -40,6 +40,7 @@ app.use(expressValidator());
 
 app.use(passport.initialize());
 require('./app/config/passportConfig')(passport);
+
 /**
  * Initialize database connection
  */
@@ -48,14 +49,15 @@ require('./app/db/index');
 const authRoutes = require('./app/routes/authRoutes');
 app.use('/api/auth/', authRoutes);
 
-const protectedRoutes = require('./app/routes/protectedRoutes');
-app.use('/api/', passport.authenticate('jwt'), protectedRoutes);
-
 const userRoutes = require('./app/routes/userRoutes');
-app.use('/api/', passport.authenticate('jwt'), userRoutes);
+app.use('/api/', passport.authenticate('jwt', {
+    session: false
+}), userRoutes);
 
 const teamRoutes = require('./app/routes/teamRoutes');
-app.use('/api/', passport.authenticate('jwt'), teamRoutes);
+app.use('/api/', passport.authenticate('jwt', {
+    session: false
+}), teamRoutes);
 
 /**
  * Start Express server.
