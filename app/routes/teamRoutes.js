@@ -36,7 +36,7 @@ router.get('/teams', [passport.authenticate('jwt', {
     }
 });
 
-router.post('/teams', passport.authenticate('jwt', {
+router.put('/teams', passport.authenticate('jwt', {
     session: false
 }), async (req, res, next) => {
     try {
@@ -176,10 +176,27 @@ router.delete('/teams/:id/member', passport.authenticate('jwt', {
     }
 });
 
-// add leader
+router.get('/teams/:id/members', [passport.authenticate('jwt', {
+    session: false
+})], async (req, res, next) => {
+    try {
+        let team = await Team.findById(req.params.id);
+        res.status(200).json(team.members);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
 
-
-// remove leader
+router.get('/teams/:id/leaders', [passport.authenticate('jwt', {
+    session: false
+})], async (req, res, next) => {
+    try {
+        let team = await Team.findById(req.params.id);
+        res.status(200).json(team.leaders);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
 
 
 
