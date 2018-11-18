@@ -94,7 +94,16 @@ const userSchema = new mongoose.Schema({
     teams: [{
         type: Schema.Types.ObjectId,
         ref: 'Team'
+    }],
+    bookings: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Booking'
+    }],
+    courses: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Course'
     }]
+
 }, {
     timestamps: true
 });

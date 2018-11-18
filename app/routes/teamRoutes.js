@@ -66,8 +66,53 @@ router.get('/teams/:id', [passport.authenticate('jwt', {
     session: false
 })], async (req, res, next) => {
     try {
-        let team = await User.findById(req.params.id);
+        let team = await Team.findById(req.params.id);
         res.status(200).json(team);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
+
+router.put('/teams/:id', [passport.authenticate('jwt', {
+    session: false
+})], async (req, res, next) => {
+    try {
+        let team = await Team.findById(req.params.id);
+
+        if (!team) {
+            res.status(404);
+        }
+
+        if (req.user.status.localeCompare('admin') === 0 || team.leaders.indexOf(req.user._id) > -1) {
+            // user has required permissions
+            let updated_team = await Team.findByIdAndUpdate(req.params.id, req.team, {
+                new: true
+            });
+            res.status(200).json(updated_team);
+        }
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
+
+// delete team
+router.delete('/teams/:id', passport.authenticate('jwt', {
+    session: false
+}), async (req, res, next) => {
+    try {
+        let team = await Team.findById(id);
+        if (req.user.status === 'admin' || team.leaders.indexOf(req.user._id) > -1) {
+            let err = await Team.remove({
+                _id: req.params.id
+            });
+
+            if (err) {
+                res.status(401).send('Unauthorized');
+            }
+
+            res.status(200).send('Team has been deleted succesfully.');
+        }
+        res.status(401).send('Unauthorized');
     } catch (error) {
         res.status(500).json(error);
     }
@@ -136,27 +181,6 @@ router.delete('/teams/:id/member', passport.authenticate('jwt', {
 
 // remove leader
 
-// delete team
-router.delete('/teams/:id', passport.authenticate('jwt', {
-    session: false
-}), async (req, res, next) => {
-    try {
-        let team = await Team.findById(id);
-        if (req.user.status === 'admin' || team.leaders.indexOf(req.user._id) > -1) {
-            let err = await Team.remove({
-                _id: req.params.id
-            });
 
-            if (err) {
-                res.status(401).send('Unauthorized');
-            }
-
-            res.status(200).send('Team has been deleted succesfully.');
-        }
-        res.status(401).send('Unauthorized');
-    } catch (error) {
-        res.status(500).json(error);
-    }
-});
 
 module.exports = router;
