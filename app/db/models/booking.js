@@ -26,6 +26,10 @@ const bookingSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    team: {
+        type: Schema.Types.ObjectId,
+        ref: 'Team'
+    },
     type: {
         type: String,
         enum: ['single, abo, series, course']

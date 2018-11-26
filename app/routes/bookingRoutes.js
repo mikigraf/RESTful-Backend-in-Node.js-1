@@ -54,3 +54,52 @@ router.get('/bookings', [passport.authenticate('jwt', {
         res.status(500).send('Internal server error');
     }
 });
+
+router.put('/bookings', [passport.authenticate('jwt', {
+    session: false
+})], async (req, res, next) => {
+    try {
+        var booking = new Booking({
+            booked_by: req.user._id,
+            start_date: req.body.booking.start_date,
+            end_date: req.body.booking.end_date,
+            description: req.body.booking.description,
+            players: req.body.booking.players,
+            type: req.body.booking.type,
+            court: req.body.booking.court,
+            price: req.body.booking.price,
+        });
+
+        if (req.body.booking.hasOwnProperty('team')) {
+            let team = await Team.findById(req.body.booking.team);
+            if (!team) {
+                res.status(500).send('Cant find team');
+            }
+
+            booking.team = team._id;
+        }
+
+        if (req.body.booking.type.localeCompare('abo') || req.body.booking.type.localeCompare('series')) {
+            var series = await Series.create(req.body.booking.series);
+            booking.series = series;
+        } else if (req.body.booking.type.localeCompare('course')) {
+            let course = await Course.findById(req.body.booking.course.id);
+            if (!course) {
+                res.status(500).send('Cant find course');
+            }
+            booking.course = course._id;
+        }
+
+        let new_booking = await Bookings.create(booking);
+
+        if (!new_booking) {
+            res.status(500).send('Internal server error');
+        }
+
+        res.status(200).json(new_booking);
+
+        if (!booking)
+    } catch (error) {
+        res.status(500).send('Internal server error');
+    }
+});

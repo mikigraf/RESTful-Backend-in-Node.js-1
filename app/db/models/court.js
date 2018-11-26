@@ -42,5 +42,5 @@ const courtSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Court = mongoose.model("Team", courtSchema);
+const Court = mongoose.model("Court", courtSchema);
 module.exports = Court;
